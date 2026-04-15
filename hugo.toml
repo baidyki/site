@@ -1,0 +1,24 @@
+baseURL = "https://baidyki.github.io/site/"
+languageCode = "en-us"
+title = "Б'ємо бaiдики"
+theme = "hugo-book"
+
+disablePathToLower = true
+
+[params]
+  description = "Few words about AI"
+  BookTheme = "auto"
+  BookSection = "*"
+  BookToC = true
+  BookSearch = true
+  BookComments = false
+  BookDateFormat = "January 2, 2006"
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+  [markup.highlight]
+    style = "base16-snazzy"
