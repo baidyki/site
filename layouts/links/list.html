@@ -1,0 +1,308 @@
+{{ define "main" }}
+{{ $flags := dict
+  "en" "🇬🇧"
+  "en-us" "🇺🇸"
+  "de" "🇩🇪"
+  "fr" "🇫🇷"
+  "es" "🇪🇸"
+  "it" "🇮🇹"
+  "pl" "🇵🇱"
+  "ru" "🇷🇺"
+  "uk" "🇺🇦"
+  "ja" "🇯🇵"
+  "zh" "🇨🇳"
+}}
+{{ $classifiers := dict
+  "general"    (dict "icon" "🌍" "label" "General")
+  "technical"  (dict "icon" "⚙️" "label" "Technical")
+  "managerial" (dict "icon" "👨‍💼" "label" "Managerial")
+  "deep"       (dict "icon" "🔬" "label" "Deep Dive")
+}}
+{{ $classifierOrder := slice "general" "technical" "managerial" "deep" }}
+
+<style>
+  .links-filter { margin: 1.25em 0 0.5em; display: flex; flex-direction: column; gap: 0.35em; }
+  .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35em; }
+  .filter-label { font-size: 0.8em; opacity: 0.7; min-width: 5.5em; text-transform: uppercase; letter-spacing: 0.05em; }
+  .filter-clear { align-self: flex-start; margin-top: 0.25em; font-size: 0.8em; background: none; border: none; color: currentColor; opacity: 0.7; cursor: pointer; text-decoration: underline; padding: 0; }
+  .filter-clear[hidden] { display: none; }
+
+  .links-list { list-style: none; padding: 0; margin: 0.75em 0 0; }
+  .link-item { display: flex; gap: 1em; padding: 0.9em 0; border-bottom: 1px solid rgba(128,128,128,0.2); position: relative; }
+  .link-item[hidden] { display: none; }
+  .link-item:last-child { border-bottom: none; }
+  .link-item.visited { background: rgba(34,197,94,0.04); }
+  .link-item.visited .link-title { opacity: 0.75; }
+  .link-rating { flex: 0 0 5.5em; font-size: 0.95em; letter-spacing: 0.1em; color: #e0a800; white-space: nowrap; }
+  .link-main { flex: 1; min-width: 0; padding-right: 6.5em; }
+  .link-flag { margin-right: 0.35em; }
+  .link-classifiers { margin-right: 0.35em; }
+  .classifier-icon { margin-right: 0.15em; }
+  .link-title { font-weight: 600; }
+  .link-source { color: rgba(128,128,128,0.9); font-size: 0.85em; margin-left: 0.5em; }
+  .link-desc { margin: 0.25em 0 0.4em; }
+  .link-tags { margin-top: 0.35em; }
+
+  .link-mark { position: absolute; top: 0.9em; right: 0; padding: 0.15em 0.7em; border-radius: 999px; background: transparent; border: 1px solid rgba(128,128,128,0.3); color: currentColor; font-size: 0.75em; font-family: inherit; cursor: pointer; opacity: 0.6; white-space: nowrap; }
+  .link-mark:hover { opacity: 1; }
+  .link-item.visited .link-mark { background: rgba(34,197,94,0.2); border-color: rgba(34,197,94,0.5); opacity: 1; }
+
+  .tag-badge { display: inline-block; padding: 0.1em 0.65em; margin: 0 0.15em 0.2em 0; border-radius: 999px; background: rgba(128,128,128,0.15); border: 1px solid rgba(128,128,128,0.25); color: currentColor; font-size: 0.78em; font-family: inherit; line-height: 1.5; cursor: pointer; text-decoration: none; }
+  .tag-badge:hover { background: rgba(128,128,128,0.3); }
+  .tag-badge.active { background: rgba(59,130,246,0.25); border-color: rgba(59,130,246,0.55); }
+
+  .links-empty { padding: 1.5em 0; opacity: 0.7; font-style: italic; }
+  .links-empty[hidden] { display: none; }
+</style>
+
+<article class="markdown book-article">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+
+  {{ $links := where .Pages "Params.link" "!=" nil }}
+
+  {{/* Unique values across links */}}
+  {{ $allTags := slice }}
+  {{ $cats := slice }}
+  {{ $rates := slice }}
+  {{ $langs := slice }}
+  {{ $allClass := slice }}
+  {{ range $links }}
+    {{ range .Params.linktags }}{{ $allTags = $allTags | append . }}{{ end }}
+    {{ with .Params.category }}{{ $cats = $cats | append . }}{{ end }}
+    {{ $rates = $rates | append (.Params.rating | default 0 | int) }}
+    {{ with .Params.language }}{{ $langs = $langs | append . }}{{ end }}
+    {{ range .Params.classifiers }}{{ $allClass = $allClass | append . }}{{ end }}
+  {{ end }}
+  {{ $uniqueTags := $allTags | uniq | sort }}
+  {{ $uniqueCats := $cats | uniq | sort }}
+  {{ $uniqueLangs := $langs | uniq | sort }}
+  {{ $uniqueClass := $allClass | uniq }}
+
+  <div class="links-filter" id="links-filter">
+    {{ with $uniqueTags }}
+      <div class="filter-row">
+        <span class="filter-label">Tag</span>
+        {{ range . }}
+          <button type="button" class="tag-badge filter-chip" data-filter="tag" data-value="{{ . }}">{{ . }}</button>
+        {{ end }}
+      </div>
+    {{ end }}
+    {{ with $uniqueCats }}
+      <div class="filter-row">
+        <span class="filter-label">Category</span>
+        {{ range . }}
+          <button type="button" class="tag-badge filter-chip" data-filter="category" data-value="{{ . }}">{{ . }}</button>
+        {{ end }}
+      </div>
+    {{ end }}
+    <div class="filter-row">
+      <span class="filter-label">Rating</span>
+      {{ range (slice 5 4 3 2 1) }}
+        {{ $r := . }}
+        {{ if in $rates $r }}
+          <button type="button" class="tag-badge filter-chip" data-filter="rating" data-value="{{ $r }}">
+            {{- range seq 1 5 -}}{{- if le . $r -}}★{{- else -}}☆{{- end -}}{{- end -}}
+          </button>
+        {{ end }}
+      {{ end }}
+    </div>
+    {{ with $uniqueLangs }}
+      <div class="filter-row">
+        <span class="filter-label">Language</span>
+        {{ range . }}
+          {{ $lang := . }}
+          {{ $flag := index $flags (lower $lang) }}
+          <button type="button" class="tag-badge filter-chip" data-filter="language" data-value="{{ $lang }}">{{ with $flag }}{{ . }} {{ end }}{{ $lang }}</button>
+        {{ end }}
+      </div>
+    {{ end }}
+    {{ if $uniqueClass }}
+      <div class="filter-row">
+        <span class="filter-label">Classifier</span>
+        {{ range $classifierOrder }}
+          {{ $key := . }}
+          {{ if in $uniqueClass $key }}
+            {{ $meta := index $classifiers $key }}
+            <button type="button" class="tag-badge filter-chip" data-filter="classifier" data-value="{{ $key }}" title="{{ $meta.label }}">{{ $meta.icon }} {{ $meta.label }}</button>
+          {{ end }}
+        {{ end }}
+      </div>
+    {{ end }}
+    <div class="filter-row">
+      <span class="filter-label">Status</span>
+      <button type="button" class="tag-badge filter-chip" data-filter="status" data-value="visited">✓ Visited</button>
+      <button type="button" class="tag-badge filter-chip" data-filter="status" data-value="unvisited">○ Unvisited</button>
+    </div>
+    <button type="button" class="filter-clear" id="filter-clear" hidden>clear filters</button>
+  </div>
+
+  <ul class="links-list" id="links-list">
+    {{ range sort $links "Params.rating" "desc" }}
+      {{ $r := .Params.rating | default 0 | int }}
+      <li class="link-item"
+          data-key="{{ .Params.link }}"
+          data-tags="{{ delimit .Params.linktags "," }}"
+          data-category="{{ .Params.category }}"
+          data-rating="{{ $r }}"
+          data-language="{{ .Params.language }}"
+          data-classifiers="{{ delimit (.Params.classifiers | default slice) "," }}">
+        <div class="link-rating" title="{{ $r }} / 5" aria-label="Rating: {{ $r }} out of 5">
+          {{- range seq 1 5 -}}
+            {{- if le . $r -}}★{{- else -}}☆{{- end -}}
+          {{- end -}}
+        </div>
+        <div class="link-main">
+          {{ $lang := .Params.language }}
+          {{ with $lang }}
+            {{ with index $flags (lower .) }}
+              <span class="link-flag" title="{{ $lang }}" aria-label="Language: {{ $lang }}">{{ . }}</span>
+            {{ end }}
+          {{ end }}
+          {{ $itemClass := .Params.classifiers | default slice }}
+          {{ with $itemClass }}
+            <span class="link-classifiers">
+              {{ range $classifierOrder }}
+                {{ $key := . }}
+                {{ if in $itemClass $key }}
+                  {{ $meta := index $classifiers $key }}
+                  <span class="classifier-icon" title="{{ $meta.label }}" aria-label="{{ $meta.label }}">{{ $meta.icon }}</span>
+                {{ end }}
+              {{ end }}
+            </span>
+          {{ end }}
+          <a class="link-title" href="{{ .Params.link }}" target="_blank" rel="noopener noreferrer">{{ .Title }}</a>
+          {{ with .Params.source }}<span class="link-source">{{ . }}</span>{{ end }}
+          {{ with .Params.category }}<span class="link-source">{{ . }}</span>{{ end }}
+          {{ with .Params.description }}<div class="link-desc">{{ . }}</div>{{ end }}
+          {{ with .Params.linktags }}
+            <div class="link-tags">
+              {{ range . }}
+                <button type="button" class="tag-badge filter-chip" data-filter="tag" data-value="{{ . }}">{{ . }}</button>
+              {{ end }}
+            </div>
+          {{ end }}
+        </div>
+        <button type="button" class="link-mark" data-action="mark" aria-pressed="false">Mark visited</button>
+      </li>
+    {{ end }}
+  </ul>
+  <p class="links-empty" id="links-empty" hidden>No links match the selected filters.</p>
+</article>
+
+<script>
+(function () {
+  var list = document.getElementById('links-list');
+  if (!list) return;
+  var items = list.querySelectorAll('.link-item');
+  var empty = document.getElementById('links-empty');
+  var clearBtn = document.getElementById('filter-clear');
+  var STORE_KEY = 'baidyki.links.visited.v1';
+
+  var visited = new Set();
+  try {
+    var raw = localStorage.getItem(STORE_KEY);
+    if (raw) JSON.parse(raw).forEach(function (k) { visited.add(k); });
+  } catch (e) { /* storage unavailable or corrupt — continue with empty set */ }
+
+  function persist() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(Array.from(visited))); } catch (e) {}
+  }
+
+  var state = { tag: null, category: null, rating: null, language: null, classifier: null, status: null };
+
+  function matches(item) {
+    if (state.tag) {
+      var tags = (item.getAttribute('data-tags') || '').split(',').filter(Boolean);
+      if (tags.indexOf(state.tag) === -1) return false;
+    }
+    if (state.category && item.getAttribute('data-category') !== state.category) return false;
+    if (state.rating !== null && parseInt(item.getAttribute('data-rating'), 10) !== state.rating) return false;
+    if (state.language && item.getAttribute('data-language') !== state.language) return false;
+    if (state.classifier) {
+      var classifiers = (item.getAttribute('data-classifiers') || '').split(',').filter(Boolean);
+      if (classifiers.indexOf(state.classifier) === -1) return false;
+    }
+    if (state.status) {
+      var isVisited = visited.has(item.getAttribute('data-key'));
+      if (state.status === 'visited' && !isVisited) return false;
+      if (state.status === 'unvisited' && isVisited) return false;
+    }
+    return true;
+  }
+
+  function syncItemVisual(item) {
+    var key = item.getAttribute('data-key');
+    var isVisited = visited.has(key);
+    item.classList.toggle('visited', isVisited);
+    var btn = item.querySelector('.link-mark');
+    if (btn) {
+      btn.textContent = isVisited ? '✓ Visited' : 'Mark visited';
+      btn.setAttribute('aria-pressed', isVisited ? 'true' : 'false');
+    }
+  }
+
+  function apply() {
+    var visible = 0;
+    items.forEach(function (item) {
+      var show = matches(item);
+      item.hidden = !show;
+      if (show) visible++;
+    });
+    document.querySelectorAll('.filter-chip').forEach(function (chip) {
+      var dim = chip.getAttribute('data-filter');
+      var val = chip.getAttribute('data-value');
+      var current = state[dim];
+      var active = dim === 'rating'
+        ? (current !== null && current === parseInt(val, 10))
+        : current === val;
+      chip.classList.toggle('active', active);
+    });
+    if (empty) empty.hidden = visible !== 0;
+    var any = state.tag || state.category || state.rating !== null || state.language || state.classifier || state.status;
+    if (clearBtn) clearBtn.hidden = !any;
+  }
+
+  // Initial visual sync for stored visited state
+  items.forEach(syncItemVisual);
+
+  document.addEventListener('click', function (e) {
+    var mark = e.target.closest('.link-mark');
+    if (mark) {
+      var item = mark.closest('.link-item');
+      if (!item) return;
+      var key = item.getAttribute('data-key');
+      if (visited.has(key)) visited.delete(key); else visited.add(key);
+      persist();
+      syncItemVisual(item);
+      apply();
+      return;
+    }
+    var chip = e.target.closest('.filter-chip');
+    if (chip) {
+      var dim = chip.getAttribute('data-filter');
+      var raw = chip.getAttribute('data-value');
+      var val = dim === 'rating' ? parseInt(raw, 10) : raw;
+      state[dim] = state[dim] === val ? null : val;
+      apply();
+      return;
+    }
+    if (e.target.id === 'filter-clear') {
+      state = { tag: null, category: null, rating: null, language: null, classifier: null, status: null };
+      apply();
+    }
+  });
+
+  // Sync across tabs
+  window.addEventListener('storage', function (e) {
+    if (e.key !== STORE_KEY) return;
+    visited = new Set();
+    try { if (e.newValue) JSON.parse(e.newValue).forEach(function (k) { visited.add(k); }); } catch (err) {}
+    items.forEach(syncItemVisual);
+    apply();
+  });
+
+  apply();
+})();
+</script>
+{{ end }}

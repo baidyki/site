@@ -18,7 +18,8 @@ If something is borderline, leave it out and ask.
 hugo/
 ├── content/           ← all Markdown lives here
 │   ├── posts/         ← dated blog entries
-│   └── articles/      ← long-form + evergreen docs
+│   ├── articles/      ← long-form + evergreen docs
+│   └── links/         ← curated external-resource pointers
 ├── themes/            ← theme (do not modify)
 ├── static/            ← images, downloadable files
 ├── layouts/           ← optional theme overrides
@@ -51,9 +52,53 @@ tags: ["..."]
 
 Keep `draft: true` while working; flip to `false` to publish. For video-backed posts, also include `originalDate`, `author`, `language`, `keywords`.
 
-### Tags blacklist
+## Links
 
-Never assign the following tags (case-insensitive) to any content, even if the source material suggests them. If existing content already carries a blacklisted tag in any casing, remove it.
+Curated pointers to outside resources live under `content/links/`. Evergreen — filenames are plain slugs, no date prefix. Rendered as a single JS-filterable list at `/links/` by [layouts/links/list.html](layouts/links/list.html); link files have **empty bodies** — all data lives in front matter.
+
+### Link front matter
+
+```yaml
+---
+title: "..."
+link: "https://..."              # external URL — MUST be `link`, not `url` (Hugo reserves `url`)
+source: "..."                    # optional display label (the publisher/author — do NOT repeat the category, e.g. use "Anthropic", not "YouTube · Anthropic")
+category: "..."                  # single value, e.g. "YouTube"
+language: "en"                   # ISO code; renders a flag via the site's flag dict
+linktags: ["tag one", "tag two"] # array; see taxonomy + tag-style notes below
+classifiers: ["general"]         # optional; zero or more of: general, technical, deep — see Classifiers below
+rating: 0                        # integer 0–5
+description: "..."               # one sentence; do NOT mention the language (the flag covers it)
+---
+```
+
+### Classifiers
+
+Orthogonal to tags/category — describe the *audience altitude* of the content. Stored under `classifiers`, rendered as emoji badges after the flag, and exposed as a single-select filter row. Multiple classifiers per link are allowed and combine (a post can be both technical and deep). Leave empty to opt out.
+
+| Key         | Icon | Meaning                                                                 |
+| ----------- | ---- | ----------------------------------------------------------------------- |
+| `general`   | 🌍   | General knowledge, accessible to everyone interested in AI.             |
+| `technical` | ⚙️   | Technical content, requires engineering background.                     |
+| `deep`      | 🔬   | Deep/advanced content, covers internals or mechanics.                   |
+
+Use only the keys above. New keys require a matching entry in the `$classifiers` dict in [layouts/links/list.html](layouts/links/list.html).
+
+### Taxonomy separation
+
+Link tags use a **separate `linktag` taxonomy** declared in `hugo.toml` so they don't intermix with the `tags` taxonomy that posts and articles use. The default `tag` taxonomy is retained explicitly in the same `[taxonomies]` block — keep it.
+
+### Tag style
+
+Link tags are **lowercase words separated by spaces**, not hyphens (e.g. `"best practices"`, `"claude code"`, `"claude routines"` — not `"best-practices"`). Keep existing values consistent when adding new links.
+
+### Filter UI
+
+Five dimensions — Tag, Category, Rating, Language, Classifier — each **single-select** (click a chip to set; click the same chip to clear). Dimensions AND together. Rating match is exact-star (5, 4, 3, …). Inline tag badges on each item double as tag-filter toggles. Classifier icons on items are display-only (tooltip on hover); use the Classifier filter row to filter.
+
+## Tags blacklist
+
+Never assign the following tags (case-insensitive) to any content — posts, articles, or links — even if the source material suggests them. If existing content already carries a blacklisted tag in any casing, remove it.
 
 - `AI`
 

@@ -14,6 +14,10 @@ disablePathToLower = true
   BookComments = false
   BookDateFormat = "January 2, 2006"
 
+[taxonomies]
+  tag = "tags"
+  linktag = "linktags"
+
 [markup]
   [markup.goldmark.renderer]
     unsafe = true
