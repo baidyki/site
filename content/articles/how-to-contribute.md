@@ -1,9 +1,19 @@
 ---
-title: "How to Contribute to This Site"
+title: "How to Contribute"
 date: 2026-04-15
 draft: false
-tags: ["meta", "contributing", "hugo", "claude-code"]
-keywords: ["hugo", "github pages", "contributing", "claude code"]
+tags: ["baidyki", "contributing"]
+---
+
+# How to contribute
+
+## TL;DR
+
+- **Hugo extended edition required** — install it via Homebrew, Snap, or direct download, then run `hugo server -D` to preview locally
+- **No PII, no employer references, no secrets** — the repo is public, treat every commit as published to the internet
+- **Claude Code is recommended** — the project ships with skills and docs that automate naming conventions, front matter, and content drafting
+- **Submit via pull request** — branch, commit, push, and open a PR at the repository
+
 ---
 
 This is a public, open-source site. Anyone is welcome to propose posts, articles, and improvements. This guide walks you through setting up a local environment, previewing changes, and submitting them back.
@@ -155,7 +165,7 @@ Then edit the generated file. A minimal front matter looks like:
 title: "My New Post"
 date: 2026-04-15
 draft: false
-tags: ["ai", "claude"]
+tags: ["claude"]
 ---
 
 Your content here.
@@ -202,3 +212,10 @@ You do not have to use Claude Code to contribute, but if you are going to spend 
 ## Getting help
 
 Open an issue on [the repository](https://github.com/baidyki/site/issues) if something is unclear, broken, or missing from this guide. Improvements to this page are welcome too — it lives at `content/articles/how-to-contribute.md`.
+
+## References
+
+1. [Hugo](https://gohugo.io/) — static site generator used to build this site
+2. [Hugo releases](https://github.com/gohugoio/hugo/releases) — download page for Hugo extended edition
+3. [Git for Windows](https://git-scm.com/download/win) — official Git installer for Windows
+4. [Claude Code](https://claude.com/claude-code) — Anthropic's CLI tool with project-aware skills used by this site
