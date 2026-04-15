@@ -51,6 +51,12 @@ tags: ["..."]
 
 Keep `draft: true` while working; flip to `false` to publish. For video-backed posts, also include `originalDate`, `author`, `language`, `keywords`.
 
+### Tags blacklist
+
+Never assign the following tags (case-insensitive) to any content, even if the source material suggests them. If existing content already carries a blacklisted tag in any casing, remove it.
+
+- `AI`
+
 ## Local preview
 
 ```bash
@@ -63,7 +69,8 @@ hugo server -D
 
 The project ships Hugo-aware skills under `.claude/`. Notable:
 
-- `youtube-post` — drafts a post under `content/posts/` from a YouTube URL, using Hugo's built-in `{{< youtube >}}` shortcode and YouTube metadata.
+- `youtube-post-writer` — drafts a post under `content/posts/` from a YouTube URL, using Hugo's built-in `{{< youtube >}}` shortcode and YouTube metadata.
+- `article-writer` — writes a well-structured article under `content/articles/`. Researches sources, builds an outline, produces content with a TL;DR, inline citations, and clear heading hierarchy.
 
 Prefer skills over hand-rolling when a matching one exists.
 

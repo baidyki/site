@@ -1,5 +1,5 @@
 ---
-name: youtube-post
+name: youtube-post-writer
 description: Create a Hugo blog post under content/posts/ from a YouTube URL. Use when the user asks to add/publish a blog post about a YouTube video. The post embeds the video via Hugo's built-in {{< youtube >}} shortcode and takes its title/author from YouTube metadata.
 ---
 
