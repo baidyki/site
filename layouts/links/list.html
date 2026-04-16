@@ -21,10 +21,24 @@
 {{ $classifierOrder := slice "general" "technical" "managerial" "deep" }}
 
 <style>
-  .links-filter { margin: 1.25em 0 0.5em; display: flex; flex-direction: column; gap: 0.35em; }
-  .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35em; }
-  .filter-label { font-size: 0.8em; opacity: 0.7; min-width: 5.5em; text-transform: uppercase; letter-spacing: 0.05em; }
-  .filter-clear { align-self: flex-start; margin-top: 0.25em; font-size: 0.8em; background: none; border: none; color: currentColor; opacity: 0.7; cursor: pointer; text-decoration: underline; padding: 0; }
+  .links-filter { margin: 1em 0 0.5em; display: flex; flex-wrap: wrap; align-items: center; gap: 0.4em; font-size: var(--font-size-smaller); }
+  /* override hugo-book's default details/summary styling inside .markdown */
+  .links-filter .filter-dd { padding: 0; margin: 0; border: none; border-radius: 0; position: relative; }
+  .links-filter .filter-dd > summary { list-style: none; padding: 0; margin: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4em; padding: 0.2em 0.55em 0.2em 0.65em; border: 1px solid var(--gray-200); border-radius: var(--border-radius); background: transparent; line-height: 1.5; user-select: none; }
+  .links-filter .filter-dd > summary::-webkit-details-marker { display: none; }
+  .links-filter .filter-dd > summary::before { content: none; }
+  .links-filter .filter-dd > summary::after { content: "▾"; font-size: 0.7em; opacity: 0.55; margin-inline-start: 0.15em; }
+  .links-filter .filter-dd > summary:hover { background: var(--gray-100); }
+  .links-filter .filter-dd[open] > summary { background: var(--gray-100); border-color: var(--gray-500); }
+  .links-filter .filter-dd.active > summary { border-color: var(--color-link); color: var(--color-link); }
+  .dd-label { opacity: 0.7; }
+  .filter-dd.active .dd-label { opacity: 0.9; }
+  .dd-value { font-weight: 600; }
+  .dd-value:empty { display: none; }
+  .dd-value:not(:empty)::before { content: ":"; opacity: 0.5; margin-inline-end: 0.3em; font-weight: 400; }
+  .dd-panel { position: absolute; top: calc(100% + 0.25em); left: 0; z-index: 20; min-width: 11em; max-width: min(22em, 90vw); max-height: 18em; overflow-y: auto; padding: 0.4em; display: flex; flex-wrap: wrap; gap: 0.25em; background: var(--body-background); color: var(--body-font-color); border: 1px solid var(--gray-200); border-radius: var(--border-radius); box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
+  .filter-clear { font-size: var(--font-size-smallest); background: none; border: none; color: var(--color-link); cursor: pointer; padding: 0.25em 0.4em; }
+  .filter-clear:hover { text-decoration: underline; }
   .filter-clear[hidden] { display: none; }
 
   .links-list { list-style: none; padding: 0; margin: 0.75em 0 0; }
@@ -80,60 +94,72 @@
   {{ $uniqueClass := $allClass | uniq }}
 
   <div class="links-filter" id="links-filter">
-    {{ with $uniqueTags }}
-      <div class="filter-row">
-        <span class="filter-label">Tag</span>
-        {{ range . }}
-          <button type="button" class="tag-badge filter-chip" data-filter="tag" data-value="{{ . }}">{{ . }}</button>
-        {{ end }}
-      </div>
+    {{ if $uniqueClass }}
+      <details class="filter-dd" data-dim="classifier">
+        <summary><span class="dd-label">Classifier</span><span class="dd-value"></span></summary>
+        <div class="dd-panel">
+          {{ range $classifierOrder }}
+            {{ $key := . }}
+            {{ if in $uniqueClass $key }}
+              {{ $meta := index $classifiers $key }}
+              <button type="button" class="tag-badge filter-chip" data-filter="classifier" data-value="{{ $key }}" title="{{ $meta.label }}">{{ $meta.icon }} {{ $meta.label }}</button>
+            {{ end }}
+          {{ end }}
+        </div>
+      </details>
     {{ end }}
     {{ with $uniqueCats }}
-      <div class="filter-row">
-        <span class="filter-label">Category</span>
-        {{ range . }}
-          <button type="button" class="tag-badge filter-chip" data-filter="category" data-value="{{ . }}">{{ . }}</button>
-        {{ end }}
-      </div>
+      <details class="filter-dd" data-dim="category">
+        <summary><span class="dd-label">Category</span><span class="dd-value"></span></summary>
+        <div class="dd-panel">
+          {{ range . }}
+            <button type="button" class="tag-badge filter-chip" data-filter="category" data-value="{{ . }}">{{ . }}</button>
+          {{ end }}
+        </div>
+      </details>
     {{ end }}
-    <div class="filter-row">
-      <span class="filter-label">Rating</span>
-      {{ range (slice 5 4 3 2 1) }}
-        {{ $r := . }}
-        {{ if in $rates $r }}
-          <button type="button" class="tag-badge filter-chip" data-filter="rating" data-value="{{ $r }}">
-            {{- range seq 1 5 -}}{{- if le . $r -}}★{{- else -}}☆{{- end -}}{{- end -}}
-          </button>
-        {{ end }}
-      {{ end }}
-    </div>
-    {{ with $uniqueLangs }}
-      <div class="filter-row">
-        <span class="filter-label">Language</span>
-        {{ range . }}
-          {{ $lang := . }}
-          {{ $flag := index $flags (lower $lang) }}
-          <button type="button" class="tag-badge filter-chip" data-filter="language" data-value="{{ $lang }}">{{ with $flag }}{{ . }} {{ end }}{{ $lang }}</button>
-        {{ end }}
-      </div>
+    {{ with $uniqueTags }}
+      <details class="filter-dd" data-dim="tag">
+        <summary><span class="dd-label">Tag</span><span class="dd-value"></span></summary>
+        <div class="dd-panel">
+          {{ range . }}
+            <button type="button" class="tag-badge filter-chip" data-filter="tag" data-value="{{ . }}">{{ . }}</button>
+          {{ end }}
+        </div>
+      </details>
     {{ end }}
-    {{ if $uniqueClass }}
-      <div class="filter-row">
-        <span class="filter-label">Classifier</span>
-        {{ range $classifierOrder }}
-          {{ $key := . }}
-          {{ if in $uniqueClass $key }}
-            {{ $meta := index $classifiers $key }}
-            <button type="button" class="tag-badge filter-chip" data-filter="classifier" data-value="{{ $key }}" title="{{ $meta.label }}">{{ $meta.icon }} {{ $meta.label }}</button>
+    <details class="filter-dd" data-dim="rating">
+      <summary><span class="dd-label">Rating</span><span class="dd-value"></span></summary>
+      <div class="dd-panel">
+        {{ range (slice 5 4 3 2 1) }}
+          {{ $r := . }}
+          {{ if in $rates $r }}
+            <button type="button" class="tag-badge filter-chip" data-filter="rating" data-value="{{ $r }}">
+              {{- range seq 1 5 -}}{{- if le . $r -}}★{{- else -}}☆{{- end -}}{{- end -}}
+            </button>
           {{ end }}
         {{ end }}
       </div>
+    </details>
+    {{ with $uniqueLangs }}
+      <details class="filter-dd" data-dim="language">
+        <summary><span class="dd-label">Language</span><span class="dd-value"></span></summary>
+        <div class="dd-panel">
+          {{ range . }}
+            {{ $lang := . }}
+            {{ $flag := index $flags (lower $lang) }}
+            <button type="button" class="tag-badge filter-chip" data-filter="language" data-value="{{ $lang }}">{{ with $flag }}{{ . }} {{ end }}{{ $lang }}</button>
+          {{ end }}
+        </div>
+      </details>
     {{ end }}
-    <div class="filter-row">
-      <span class="filter-label">Status</span>
-      <button type="button" class="tag-badge filter-chip" data-filter="status" data-value="visited">✓ Visited</button>
-      <button type="button" class="tag-badge filter-chip" data-filter="status" data-value="unvisited">○ Unvisited</button>
-    </div>
+    <details class="filter-dd" data-dim="status">
+      <summary><span class="dd-label">Status</span><span class="dd-value"></span></summary>
+      <div class="dd-panel">
+        <button type="button" class="tag-badge filter-chip" data-filter="status" data-value="visited">✓ Visited</button>
+        <button type="button" class="tag-badge filter-chip" data-filter="status" data-value="unvisited">○ Unvisited</button>
+      </div>
+    </details>
     <button type="button" class="filter-clear" id="filter-clear" hidden>clear filters</button>
   </div>
 
@@ -209,7 +235,42 @@
     try { localStorage.setItem(STORE_KEY, JSON.stringify(Array.from(visited))); } catch (e) {}
   }
 
+  var DIMS = ['tag', 'category', 'rating', 'language', 'classifier', 'status'];
   var state = { tag: null, category: null, rating: null, language: null, classifier: null, status: null };
+
+  function fromHash(h) {
+    var s = { tag: null, category: null, rating: null, language: null, classifier: null, status: null };
+    (h || '').replace(/^#/, '').split('&').forEach(function (p) {
+      if (!p) return;
+      var i = p.indexOf('=');
+      if (i < 0) return;
+      var k = p.slice(0, i);
+      if (DIMS.indexOf(k) === -1) return;
+      var v = decodeURIComponent(p.slice(i + 1).replace(/\+/g, ' '));
+      s[k] = k === 'rating' ? parseInt(v, 10) : v;
+    });
+    if (s.rating !== null && isNaN(s.rating)) s.rating = null;
+    return s;
+  }
+
+  function toHash() {
+    var parts = [];
+    DIMS.forEach(function (k) {
+      var v = state[k];
+      if (v === null || v === undefined || v === '') return;
+      parts.push(k + '=' + encodeURIComponent(v));
+    });
+    return parts.join('&');
+  }
+
+  function syncHash() {
+    var h = toHash();
+    var target = h ? '#' + h : '';
+    var current = location.hash || '';
+    if (current === target) return;
+    var url = location.pathname + location.search + target;
+    history.replaceState(null, '', url);
+  }
 
   function matches(item) {
     if (state.tag) {
@@ -258,13 +319,31 @@
         : current === val;
       chip.classList.toggle('active', active);
     });
+    document.querySelectorAll('.filter-dd').forEach(function (dd) {
+      var dim = dd.getAttribute('data-dim');
+      var current = state[dim];
+      var has = current !== null && current !== undefined && current !== '';
+      dd.classList.toggle('active', has);
+      var valEl = dd.querySelector('.dd-value');
+      if (!valEl) return;
+      if (!has) { valEl.textContent = ''; return; }
+      var match = dd.querySelector('.filter-chip[data-value="' + String(current).replace(/"/g, '\\"') + '"]');
+      valEl.innerHTML = match ? match.innerHTML : String(current);
+    });
     if (empty) empty.hidden = visible !== 0;
     var any = state.tag || state.category || state.rating !== null || state.language || state.classifier || state.status;
     if (clearBtn) clearBtn.hidden = !any;
+    syncHash();
   }
 
   // Initial visual sync for stored visited state
   items.forEach(syncItemVisual);
+
+  function closeAllDropdowns(except) {
+    document.querySelectorAll('.filter-dd[open]').forEach(function (dd) {
+      if (dd !== except) dd.open = false;
+    });
+  }
 
   document.addEventListener('click', function (e) {
     var mark = e.target.closest('.link-mark');
@@ -285,13 +364,28 @@
       var val = dim === 'rating' ? parseInt(raw, 10) : raw;
       state[dim] = state[dim] === val ? null : val;
       apply();
+      closeAllDropdowns();
       return;
     }
     if (e.target.id === 'filter-clear') {
       state = { tag: null, category: null, rating: null, language: null, classifier: null, status: null };
       apply();
+      return;
     }
+    var summary = e.target.closest('.filter-dd > summary');
+    if (summary) {
+      closeAllDropdowns(summary.parentElement);
+      return;
+    }
+    if (!e.target.closest('.filter-dd')) closeAllDropdowns();
   });
+
+  window.addEventListener('hashchange', function () {
+    state = fromHash(location.hash);
+    apply();
+  });
+
+  state = fromHash(location.hash);
 
   // Sync across tabs
   window.addEventListener('storage', function (e) {
