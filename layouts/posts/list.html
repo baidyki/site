@@ -22,7 +22,7 @@
       <a href="{{ .RelPermalink }}">{{ partial "docs/title" . }}</a>
     </h2>
     <div class="book-post-container flex gap">
-      <div>
+      <div style="flex:1;min-width:0">
         {{ partial "docs/post-meta" . }}
         <div class="book-post-content markdown-inner">
           {{- .Summary | truncate 256 -}}
