@@ -16,7 +16,7 @@
 {{ range $taxonomy, $_ := .Site.Taxonomies }}
   {{ with $terms := $.GetTerms $taxonomy }}
   <div class="text-small">
-    {{ range $n, $term := $terms }}{{ if $n }}, {{ end }}
+    {{ range $n, $term := (sort $terms "Title") }}{{ if $n }}, {{ end }}
       <a href="{{ $term.RelPermalink }}">{{ $term.Title }}</a>
     {{- end }}
   </div>
