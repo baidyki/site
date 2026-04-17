@@ -64,6 +64,24 @@
   }
 }
 
+.book-post {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--gray-200);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.book-post-readmore {
+  margin-top: 0.75rem;
+
+  a {
+    font-weight: 500;
+    font-size: 0.9em;
+  }
+}
+
 .book-post-date > span {
   display: inline-flex;
   align-items: center;
