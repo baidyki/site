@@ -209,6 +209,30 @@ Install Claude Code, open this repository in it, and the project's `CLAUDE.md` a
 
 You do not have to use Claude Code to contribute, but if you are going to spend any meaningful time on the site, it is strongly recommended.
 
+## Resetting Hugo caches
+
+Hugo caches modules, resources, and build artefacts. If you see stale content, broken assets, or unexplained build errors after switching branches or updating the theme, clear the caches:
+
+```bash
+hugo mod clean          # remove the module cache
+rm -rf resources/       # remove processed images / SCSS artefacts
+rm -rf public/          # remove the previous build output
+```
+
+Then restart the dev server:
+
+```bash
+hugo server -D
+```
+
+On rare occasions the OS-level cache directory also matters. You can nuke everything Hugo stores outside the repo with:
+
+```bash
+hugo mod clean --all
+```
+
+This removes all cached modules for every Hugo project on the machine, so use it only when the per-project clean is not enough.
+
 ## Getting help
 
 Open an issue on [the repository](https://github.com/baidyki/site/issues) if something is unclear, broken, or missing from this guide. Improvements to this page are welcome too — it lives at `content/articles/how-to-contribute.md`.
