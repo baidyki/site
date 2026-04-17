@@ -50,8 +50,8 @@ Always try to fetch the video's upload date up front so both fields can be fille
 
 Then resolve `date` (the blog publishing date):
 
-- **If the user explicitly specified a date** in the original request (e.g., "on Apr 1st", "date=2026-04-01", "publish as of yesterday"): use that date for `date` without asking.
-- **Otherwise**: you **must** stop and ask the user. Present both candidates — today's date vs. the video's upload date — and accept any other date the user types in response. If the upload date couldn't be fetched, still ask, stating that only today's date is known.
+- **Default**: use **today's date**. No need to ask.
+- **If the user explicitly specified a different date** (e.g., "on Apr 1st", "date=2026-04-01", "publish as of yesterday"): use that date instead.
 
 Fill `originalDate`:
 
