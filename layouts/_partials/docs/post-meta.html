@@ -1,13 +1,15 @@
 {{ with .Date }}
   <div class="flex align-center text-small book-post-date">
-    <img src="{{ partial "docs/icon" "calendar" }}" class="book-icon" alt="{{ partial "docs/text/i18n" "Calendar" }}" />
-    <span>{{ partial "docs/date" (dict "Date" . "Format" $.Site.Params.BookDateFormat) }}</span>
-  </div>
-{{ end }}
-
-{{ with .Params.originalDate }}
-  <div class="flex align-center text-small book-post-date">
-    <span>Originally published: {{ partial "docs/date" (dict "Date" . "Format" $.Site.Params.BookDateFormat) }}</span>
+    <span title="Published">
+      <img src="{{ partial "docs/icon" "calendar" }}" class="book-icon" alt="Published" />
+      {{ partial "docs/date" (dict "Date" . "Format" $.Site.Params.BookDateFormat) }}
+    </span>
+    {{- with $.Params.originalDate }}
+      <span class="book-post-original-date" title="Originally published">
+        <img src="{{ partial "docs/icon" "calendar" }}" class="book-icon" alt="Originally published" />
+        {{ partial "docs/date" (dict "Date" . "Format" $.Site.Params.BookDateFormat) }}
+      </span>
+    {{- end }}
   </div>
 {{ end }}
 
