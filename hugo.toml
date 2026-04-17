@@ -13,6 +13,7 @@ disablePathToLower = true
   BookSearch = true
   BookComments = false
   BookDateFormat = "January 2, 2006"
+  BookLogo = "logo.png"
 
 [taxonomies]
   tag = "tags"
