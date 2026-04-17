@@ -1,7 +1,7 @@
 ---
 title: "AI Glossary"
 date: 2026-04-17
-draft: true
+draft: false
 tags: ["glossary", "llm", "prompt engineering", "agents", "machine learning"]
 keywords: ["ai glossary", "llm terminology", "ai terms explained", "machine learning glossary", "prompt engineering terms", "ai vocabulary", "context window", "transformer", "rag", "fine-tuning"]
 ---
