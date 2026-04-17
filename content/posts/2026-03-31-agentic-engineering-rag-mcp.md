@@ -4,7 +4,7 @@ date: 2026-03-31
 originalDate: 2026-03-31
 author: "fwdays"
 language: uk
-tags: ["rag", "mcp"]
+tags: ["rag", "mcp", "podcast"]
 ---
 
 {{< youtube 1UIBJ1QwJKw >}}
