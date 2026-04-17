@@ -1,3 +1,59 @@
+// Override light theme: warm cream + orange accents
+@mixin theme-light {
+  --body-background: #faf8f5;
+  --body-background-tint: none;
+  --body-font-color: #1c1a17;
+
+  --color-link: #a65312;
+  --color-visited-link: #a65312;
+
+  --icon-filter: none;
+
+  --gray-100: #f2efe9;
+  --gray-200: #e5e0d8;
+  --gray-500: #969086;
+
+  @include accent("default", #a06030);
+  @include accent("note", #3a78b0);
+  @include accent("tip", #3a8a3a);
+  @include accent("important", #b06020);
+  @include accent("warning", #c88020);
+  @include accent("caution", #c04040);
+
+  // Fallback for {{< hint >}} shortcodes
+  @include accent("info", #3a78b0);
+  @include accent("success", #3a8a3a);
+  @include accent("danger", #c04040);
+}
+
+// Override dark theme: near-black background + orange accents
+@mixin theme-dark {
+  --body-background: #131316;
+  --body-background-tint: none;
+  --body-font-color: #e0dcd5;
+
+  --color-link: #e8923c;
+  --color-visited-link: #c87a30;
+
+  --icon-filter: brightness(0) invert(1);
+
+  --gray-100: #1c1c21;
+  --gray-200: #27272e;
+  --gray-500: #8a8a94;
+
+  @include accent("default", #d08a50);
+  @include accent("note", #5e96b8);
+  @include accent("tip", #8aae60);
+  @include accent("important", #d4944c);
+  @include accent("warning", #e89840);
+  @include accent("caution", #c85050);
+
+  // Fallback for {{< hint >}} shortcodes
+  @include accent("info", #5e96b8);
+  @include accent("success", #8aae60);
+  @include accent("danger", #c85050);
+}
+
 .book-brand a {
   flex-direction: column;
 
