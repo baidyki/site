@@ -90,17 +90,32 @@ Link tags use a **separate `linktag` taxonomy** declared in `hugo.toml` so they 
 
 ### Tag style
 
-Link tags are **lowercase words separated by spaces**, not hyphens (e.g. `"best practices"`, `"claude code"`, `"claude routines"` — not `"best-practices"`). Keep existing values consistent when adding new links.
+Link tags follow the global tag rules below. Keep existing values consistent when adding new links.
 
 ### Filter UI
 
 Five dimensions — Tag, Category, Rating, Language, Classifier — each **single-select** (click a chip to set; click the same chip to clear). Dimensions AND together. Rating match is exact-star (5, 4, 3, …). Inline tag badges on each item double as tag-filter toggles. Classifier icons on items are display-only (tooltip on hover); use the Classifier filter row to filter.
 
-## Tags blacklist
+## Tags
 
-Never assign the following tags (case-insensitive) to any content — posts, articles, or links — even if the source material suggests them. If existing content already carries a blacklisted tag in any casing, remove it.
+Rules below apply to **all** tags across the site — `tags` (posts/articles) and `linktags` (links) alike.
 
-- `AI`
+### Style
+
+- **Lowercase only** — `"prompt engineering"`, not `"Prompt Engineering"`.
+- **Spaces as-is** — no hyphens, underscores, or other substitutions (e.g. `"best practices"`, not `"best-practices"`).
+
+### Allowed tag subjects
+
+Tags should be **terms**, **significant events**, or **product/company names**. Examples: `"security"`, `"leak"`, `"claude"`, `"prompt engineering"`.
+
+**No person tags** — do not tag individual people (e.g. ~~`"dario amodei"`~~). If authorship matters, use front-matter fields (`author`, `source`) instead.
+
+### Blacklist
+
+Never assign the following tags (case-insensitive) to any content, even if the source material suggests them. If existing content already carries a blacklisted tag, remove it.
+
+- `AI` — the entire site is about AI; the tag adds no signal.
 
 ## Local preview
 
