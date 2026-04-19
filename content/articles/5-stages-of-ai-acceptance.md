@@ -2,6 +2,7 @@
 title: "5 Stages of AI Acceptance: Where Does Your Organization Stand?"
 date: 2026-04-15
 draft: false
+description: "From awareness to transformation: where organizations actually stand on AI adoption, backed by McKinsey, Gartner, and MIT/BCG data."
 tags: ["methodology"]
 ---
 

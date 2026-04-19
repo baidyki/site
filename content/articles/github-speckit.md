@@ -2,6 +2,7 @@
 title: "GitHub SpecKit"
 date: 2026-04-15
 draft: false
+description: "A toolkit for Spec-Driven Development that enforces specifications before code, working with 30+ AI coding agents."
 keywords: ["spec-driven development"]
 ---
 

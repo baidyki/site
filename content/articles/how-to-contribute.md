@@ -2,6 +2,7 @@
 title: "How to Contribute"
 date: 2026-04-15
 draft: false
+description: "Set up Hugo, preview locally, and submit changes via pull request."
 tags: ["baidyki", "contributing"]
 ---
 

@@ -1,0 +1,13 @@
+{{ define "main" }}
+  <article class="markdown book-article">
+    {{ .Content }}
+    <ul class="book-articles-list">
+      {{ range .Pages.ByTitle }}
+        <li>
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          {{ with .Description }} &mdash; {{ . }}{{ end }}
+        </li>
+      {{ end }}
+    </ul>
+  </article>
+{{ end }}
