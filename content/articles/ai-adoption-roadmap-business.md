@@ -3,7 +3,7 @@ title: "AI Adoption Roadmap for Business Functions: A 12-Month Plan for HR, Fina
 date: 2026-04-16
 draft: false
 description: "A 12-month plan for HR, Finance, Legal, Marketing, Sales, and Support, with exact timings, actions, success stories, and cautionary tales."
-tags: ["methodology", "roadmap", "adoption"]
+pagetags: ["methodology", "roadmap", "adoption"]
 ---
 
 # AI Adoption Roadmap for Business Functions

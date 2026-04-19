@@ -3,7 +3,7 @@ title: "AI Fluency: The 4D Framework for Human-AI Collaboration"
 date: 2026-04-15
 draft: false
 description: "Delegation, Description, Discernment, and Diligence: the competencies that separate effective human-AI collaboration from aimless prompting."
-tags: ["methodology", "delegation", "description", "discernment", "diligence"]
+pagetags: ["methodology"]
 ---
 
 # AI Fluency: The 4D Framework for Human-AI Collaboration

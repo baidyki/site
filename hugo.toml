@@ -17,6 +17,7 @@ disablePathToLower = true
 
 [taxonomies]
   tag = "tags"
+  pagetag = "pagetags"
 
 [markup]
   [markup.goldmark.renderer]

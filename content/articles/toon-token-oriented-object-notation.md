@@ -3,7 +3,7 @@ title: "TOON: Token-Oriented Object Notation for LLMs"
 date: 2026-04-19
 draft: false
 description: "A lossless, token-efficient JSON encoding for LLM prompts, with 30–60% fewer tokens and accuracy benchmarks across Claude, Gemini, GPT, and Grok."
-tags: ["toon", "json", "tokens"]
+pagetags: ["toon", "json", "tokens"]
 ---
 
 # TOON: Token-Oriented Object Notation for LLMs

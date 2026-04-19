@@ -53,7 +53,23 @@
 {{ end }}
 
 {{ define "toc" }}
-  {{ partial "docs/taxonomy" . }}
+<nav>
+  <ul>
+    {{ with .Site.GetPage "/tags" }}
+    <li class="book-section-flat">
+      <a>{{ partial "docs/text/i18n" .Title }}</a>
+      <ul>
+      {{ range .Pages.ByTitle }}
+        <li class="flex align-center">
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          <span>{{ len .Pages }}</span>
+        </li>
+      {{ end }}
+      </ul>
+    </li>
+    {{ end }}
+  </ul>
+</nav>
 {{ end }}
 
 {{ define "footer" }}

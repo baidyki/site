@@ -3,7 +3,7 @@ title: "AI Adoption Roadmap for Engineering: A 12-Month Plan for FE, BE, QA, and
 date: 2026-04-16
 draft: false
 description: "A 12-month, phase-by-phase execution plan for FE, BE, QA, and DevOps, with exact timings, actions, metrics, and case studies."
-tags: ["methodology", "roadmap", "adoption"]
+pagetags: ["methodology", "roadmap", "adoption"]
 ---
 
 # AI Adoption Roadmap for Engineering

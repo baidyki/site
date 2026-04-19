@@ -11,3 +11,31 @@
     </ul>
   </article>
 {{ end }}
+
+{{ define "toc-container" }}
+<aside class="book-toc">
+  <div class="book-toc-content">
+    {{ template "toc" . }}
+  </div>
+</aside>
+{{ end }}
+
+{{ define "toc" }}
+<nav>
+  <ul>
+    {{ with .Site.GetPage "/pagetags" }}
+    <li class="book-section-flat">
+      <a>{{ partial "docs/text/i18n" "Tags" }}</a>
+      <ul>
+      {{ range .Pages.ByTitle }}
+        <li class="flex align-center">
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          <span>{{ len .Pages }}</span>
+        </li>
+      {{ end }}
+      </ul>
+    </li>
+    {{ end }}
+  </ul>
+</nav>
+{{ end }}
