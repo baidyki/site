@@ -101,6 +101,18 @@
   @include theme-dark;
 }
 
+.book-ai-notice {
+  margin-top: 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--gray-200);
+  text-align: center;
+  opacity: 0.7;
+
+  small {
+    font-size: 0.75rem;
+  }
+}
+
 // Theme toggle button
 .theme-toggle {
   position: fixed;
